@@ -17,10 +17,12 @@ func SetupRouting(router *httprouter.Router, database *sql.DB, log *logrus.Logge
 	api := apibuilder.NewApi("/phlapi", router, alice.New(context.ClearHandler, middleware.CORSMiddleware), alice.New(context.ClearHandler, middleware.OptionsMiddleware), log)
 
 	api.Routes = []apibuilder.Route{
-		{"GET", "/test", controllers.IndexController{Log: log}.Index, alice.New()},
+		{"GET", "/index", controllers.IndexController{Log: log}.Index, alice.New()},
 
 		{"GET", "/people", controllers.PeopleController{Log: log}.GetPeople, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
-		{"GET", "/people/new", controllers.PeopleController{Log: log}.CreatePerson, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"GET", "/person/:personId", controllers.PeopleController{Log: log}.GetPerson, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"POST", "/people/new", controllers.PeopleController{Log: log}.CreatePerson, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"PUT", "/people/update/:personId", controllers.PeopleController{Log: log}.UpdatePersonByID, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 	}
 
 	api.Finalize()

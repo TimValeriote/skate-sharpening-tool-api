@@ -13,6 +13,14 @@ func (store *PeopleStore) GetAllPeople() ([]models.PeopleStruct, error) {
 	return services.PeopleStoreSetup(store.Database, store.Log).GetAllPeople()
 }
 
+func (store *PeopleStore) GetPersonByID(personID int) ([]models.PeopleStruct, error) {
+	return services.PeopleStoreSetup(store.Database, store.Log).GetPersonByID(personID)
+}
+
 func (store *PeopleStore) CreatePerson(personResponse *models.PeopleStruct) error {
 	return services.PeopleStoreSetup(store.Database, store.Log).CreatePerson(personResponse)
+}
+
+func (store *PeopleStore) UpdatePerson(person *models.PeopleStruct) error {
+	return services.PeopleStoreSetup(store.Database, store.Log).UpdatePerson(person)
 }
