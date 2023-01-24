@@ -104,4 +104,17 @@ type Core struct {
 	Ctx      context.Context
 
 	PeopleService PeopleService
+
+	UserService UserService
+
+	ColourService ColourService
+
+	UserSkateService UserSkateService
+
+	FitService   FitService
+	BrandService BrandService
+	ModelService ModelService
+	SkateService SkateService
+
+	StoreService StoreService
 }

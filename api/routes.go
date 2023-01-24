@@ -23,6 +23,27 @@ func SetupRouting(router *httprouter.Router, database *sql.DB, log *logrus.Logge
 		{"GET", "/person/:personId", controllers.PeopleController{Log: log}.GetPerson, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"POST", "/people/new", controllers.PeopleController{Log: log}.CreatePerson, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"PUT", "/people/update/:personId", controllers.PeopleController{Log: log}.UpdatePersonByID, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+
+		{"GET", "/users", controllers.UserController{Log: log}.GetUsers, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"GET", "/user", controllers.UserController{Log: log}.GetUserByEmail, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+
+		{"GET", "/colours", controllers.ColourController{Log: log}.GetColours, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"GET", "/colour", controllers.ColourController{Log: log}.GetColourByName, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+
+		{"GET", "/user/skates/:userId", controllers.UserSkateController{Log: log}.GetAllUserSkatesByUserID, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+
+		{"GET", "/fits", controllers.FitController{Log: log}.GetFits, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"GET", "/fits/:fitId", controllers.FitController{Log: log}.GetFitsById, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+
+		{"GET", "/brands", controllers.BrandController{Log: log}.GetBrands, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"GET", "/brands/:brandId", controllers.BrandController{Log: log}.GetBrandById, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+
+		{"GET", "/models", controllers.ModelController{Log: log}.GetModels, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"GET", "/models/:modelId", controllers.ModelController{Log: log}.GetModelById, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+
+		{"GET", "/skates", controllers.SkateController{Log: log}.GetSkates, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+
+		{"GET", "/stores", controllers.StoreController{Log: log}.GetStores, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 	}
 
 	api.Finalize()

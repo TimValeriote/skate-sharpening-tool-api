@@ -5,7 +5,7 @@ CREATE TABLE `users` (
   `email` varchar(255),
   `phone_number` varchar(255),
   `uuid` varchar(255),
-  `isStaff` tinyint(1) DEFAULT 0 NOT NULL
+  `is_staff` tinyint(1)
 );
 
 CREATE TABLE `staff` (
@@ -16,21 +16,29 @@ CREATE TABLE `staff` (
 CREATE TABLE `brands` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
-  `short_name` varchar(255)
+  `short_name` varchar(255),
+  `is_skate` tinyint(1),
+  `is_steel` tinyint(1),
+  `is_holder` tinyint(1)
 );
 
 CREATE TABLE `skates` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `model_id` int,
   `brand_id` int,
-  `fit_id` int,
-  `size` int
+  `fit_id` int
 );
 
 CREATE TABLE `model` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
+  `alias` varchar(255),
   `brand_id` int
+);
+
+CREATE TABLE `colour` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `colour` varchar(255)
 );
 
 CREATE TABLE `fits` (
@@ -57,7 +65,16 @@ CREATE TABLE `open_sharpenings` (
 CREATE TABLE `user_skates` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int,
-  `skate` int
+  `skate_id` int,
+  `holder_brand_id` int,
+  `holder_size` float,
+  `skate_size` float,
+  `lace_colour_id` int,
+  `has_steel` tinyint(1),
+  `steel_id` int,
+  `has_guards` tinyint(1),
+  `guard_colour_id` int,
+  `preferred_radius` varchar(255)
 );
 
 CREATE TABLE `closed_sharpenings` (
@@ -85,7 +102,15 @@ ALTER TABLE `open_sharpenings` ADD FOREIGN KEY (`store_id`) REFERENCES `store` (
 
 ALTER TABLE `user_skates` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
-ALTER TABLE `user_skates` ADD FOREIGN KEY (`skate`) REFERENCES `skates` (`id`);
+ALTER TABLE `user_skates` ADD FOREIGN KEY (`skate_id`) REFERENCES `skates` (`id`);
+
+ALTER TABLE `user_skates` ADD FOREIGN KEY (`steel_id`) REFERENCES `brands` (`id`);
+
+ALTER TABLE `user_skates` ADD FOREIGN KEY (`guard_colour_id`) REFERENCES `colour` (`id`);
+
+ALTER TABLE `user_skates` ADD FOREIGN KEY (`lace_colour_id`) REFERENCES `colour` (`id`);
+
+ALTER TABLE `user_skates` ADD FOREIGN KEY (`holder_brand_id`) REFERENCES `brands` (`id`);
 
 ALTER TABLE `closed_sharpenings` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 

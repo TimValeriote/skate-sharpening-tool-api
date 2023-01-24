@@ -24,6 +24,19 @@ func CreateBACoreContext(ctx context.Context, db *sql.DB) (*models.Core, error) 
 
 	core.PeopleService = &implementation.PeopleStore{core}
 
+	core.UserService = &implementation.UserStore{core}
+
+	core.ColourService = &implementation.ColourStore{core}
+
+	core.UserSkateService = &implementation.UserSkateStore{core}
+
+	core.FitService = &implementation.FitStore{core}
+	core.BrandService = &implementation.BrandStore{core}
+	core.ModelService = &implementation.ModelStore{core}
+	core.SkateService = &implementation.SkateStore{core}
+
+	core.StoreService = &implementation.StoreStore{core}
+
 	return core, nil
 
 }
