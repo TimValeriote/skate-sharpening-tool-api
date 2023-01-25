@@ -12,3 +12,7 @@ type SkateStore struct {
 func (store *SkateStore) GetAllSkates() ([]models.SkateStruct, error) {
 	return services.SkateStoreSetup(store.Database, store.Log).GetAllSkates()
 }
+
+func (store *SkateStore) GetSkateById(skateId int) ([]models.SkateStruct, error) {
+	return services.SkateStoreSetup(store.Database, store.Log).GetSkateById(skateId)
+}

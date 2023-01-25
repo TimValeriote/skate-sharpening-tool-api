@@ -11,5 +11,5 @@ type ColourStruct struct {
 
 type ColourService interface {
 	GetAllColours() ([]ColourStruct, error)
-	GetColourByName(colourName string) ([]ColourStruct, error)
+	GetColourById(colourId int) ([]ColourStruct, error)
 }

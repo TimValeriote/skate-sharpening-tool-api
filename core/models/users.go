@@ -12,5 +12,5 @@ type UsersStruct struct {
 
 type UserService interface {
 	GetAllUsers() ([]UsersStruct, error)
-	GetUserByEmail(userEmail string) ([]UsersStruct, error)
+	GetUserById(userId int) ([]UsersStruct, error)
 }

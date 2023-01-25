@@ -17,4 +17,5 @@ type UserSkateStruct struct {
 
 type UserSkateService interface {
 	GetAllUserSkatesByUserID(userId int) ([]UserSkateStruct, error)
+	GetUserSkateByUserIdAndUserSkateId(userId int, userSkateId int) ([]UserSkateStruct, error)
 }

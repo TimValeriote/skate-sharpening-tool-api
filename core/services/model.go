@@ -26,7 +26,7 @@ func (store *modelStore) GetAllModels() ([]models.ModelStruct, error) {
 	sql := `SELECT 
 					model.id, 
 					model.name, 
-					model.alias,
+					model.alias
 			FROM model`
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
@@ -50,7 +50,7 @@ func (store *modelStore) GetModelById(modelId int) ([]models.ModelStruct, error)
 	sql := `SELECT 
 					model.id, 
 					model.name, 
-					model.alias,
+					model.alias
 			FROM model
 			WHERE model.id = ?`
 

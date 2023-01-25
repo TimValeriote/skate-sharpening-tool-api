@@ -5,6 +5,7 @@ import (
 	//"fmt"
 	"net/http"
 	"runtime/debug"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 	"phl-skate-sharpening-api/api/constants"
@@ -47,6 +48,36 @@ func (controller StoreController) GetStores(writer http.ResponseWriter, request 
 	}
 
 	response := ConstructStoreResponse(stores)
+
+	context.Core.Commit()
+
+	writer.WriteHeader(http.StatusOK)
+	json.NewEncoder(writer).Encode(response)
+}
+
+func (controller StoreController) GetStoreById(writer http.ResponseWriter, request *http.Request) {
+	context, err := utils.NewServiceFromContext(request, constants.CONTEXT_PARAMS, constants.CONTEXT_LOGGER, constants.CONTEXT_CORE)
+	if err != nil {
+		context.Log.WithFields(logrus.Fields{
+			"event":      "phlapi::StoreController::GetStoreById - Failed to get value from context",
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	storeId, err := strconv.Atoi(context.Params.ByName("storeId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid id was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	sotre, err := context.Core.StoreService.GetStoreById(storeId)
+	if err != nil {
+		http.Error(writer, `{"error": "Internal Server Error"}`, http.StatusInternalServerError)
+		return
+	}
+
+	response := ConstructStoreResponse(sotre)
 
 	context.Core.Commit()
 

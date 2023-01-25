@@ -12,3 +12,7 @@ type UserSkateStore struct {
 func (store *UserSkateStore) GetAllUserSkatesByUserID(userID int) ([]models.UserSkateStruct, error) {
 	return services.UserSkateStoreSetup(store.Database, store.Log).GetAllUserSkatesByUserID(userID)
 }
+
+func (store *UserSkateStore) GetUserSkateByUserIdAndUserSkateId(userID int, userSkateId int) ([]models.UserSkateStruct, error) {
+	return services.UserSkateStoreSetup(store.Database, store.Log).GetUserSkateByUserIdAndUserSkateId(userID, userSkateId)
+}

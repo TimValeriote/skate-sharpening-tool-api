@@ -42,20 +42,20 @@ func (store *userStore) GetAllUsers() ([]models.UsersStruct, error) {
 	return ret, nil
 }
 
-func (store *userStore) GetUserByEmail(userEmail string) ([]models.UsersStruct, error) {
-	sql := `SELECT id, first_name, last_name, email, phone_number, uuid, is_staff FROM users WHERE email = ?`
+func (store *userStore) GetUserById(userId int) ([]models.UsersStruct, error) {
+	sql := `SELECT id, first_name, last_name, email, phone_number, uuid, is_staff FROM users WHERE id = ?`
 
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
 		store.log.WithFields(logrus.Fields{
-			"event":      "userStore::GetUserByEmail - Failed to prepare GetUserByEmail SELECT query.",
+			"event":      "userStore::GetUserById - Failed to prepare GetUserById SELECT query.",
 			"stackTrace": string(debug.Stack()),
 		}).Error(err)
 		return nil, err
 	}
 	defer query.Close()
 
-	rows, err := query.Query(userEmail)
+	rows, err := query.Query(userId)
 	if err != nil {
 		return nil, err
 	}

@@ -13,6 +13,6 @@ func (store *ColourStore) GetAllColours() ([]models.ColourStruct, error) {
 	return services.ColourStoreSetup(store.Database, store.Log).GetAllColours()
 }
 
-func (store *ColourStore) GetColourByName(colourName string) ([]models.ColourStruct, error) {
-	return services.ColourStoreSetup(store.Database, store.Log).GetColourByName(colourName)
+func (store *ColourStore) GetColourById(colourId int) ([]models.ColourStruct, error) {
+	return services.ColourStoreSetup(store.Database, store.Log).GetColourById(colourId)
 }

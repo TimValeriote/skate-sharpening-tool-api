@@ -12,4 +12,5 @@ type StoreStruct struct {
 
 type StoreService interface {
 	GetAllStores() ([]StoreStruct, error)
+	GetStoreById(storeId int) ([]StoreStruct, error)
 }

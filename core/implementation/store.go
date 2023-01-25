@@ -12,3 +12,7 @@ type StoreStore struct {
 func (store *StoreStore) GetAllStores() ([]models.StoreStruct, error) {
 	return services.StoreStoreSetup(store.Database, store.Log).GetAllStores()
 }
+
+func (store *StoreStore) GetStoreById(storeId int) ([]models.StoreStruct, error) {
+	return services.StoreStoreSetup(store.Database, store.Log).GetStoreById(storeId)
+}

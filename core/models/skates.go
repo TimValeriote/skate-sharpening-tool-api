@@ -8,4 +8,5 @@ type SkateStruct struct {
 
 type SkateService interface {
 	GetAllSkates() ([]SkateStruct, error)
+	GetSkateById(fitID int) ([]SkateStruct, error)
 }

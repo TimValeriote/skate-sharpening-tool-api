@@ -13,6 +13,6 @@ func (store *UserStore) GetAllUsers() ([]models.UsersStruct, error) {
 	return services.UserStoreSetup(store.Database, store.Log).GetAllUsers()
 }
 
-func (store *UserStore) GetUserByEmail(userEmail string) ([]models.UsersStruct, error) {
-	return services.UserStoreSetup(store.Database, store.Log).GetUserByEmail(userEmail)
+func (store *UserStore) GetUserById(userId int) ([]models.UsersStruct, error) {
+	return services.UserStoreSetup(store.Database, store.Log).GetUserById(userId)
 }

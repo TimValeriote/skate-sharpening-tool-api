@@ -5,6 +5,7 @@ import (
 	//"fmt"
 	"net/http"
 	"runtime/debug"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 	"phl-skate-sharpening-api/api/constants"
@@ -54,23 +55,23 @@ func (controller UserController) GetUsers(writer http.ResponseWriter, request *h
 	json.NewEncoder(writer).Encode(response)
 }
 
-func (controller UserController) GetUserByEmail(writer http.ResponseWriter, request *http.Request) {
+func (controller UserController) GetUserById(writer http.ResponseWriter, request *http.Request) {
 	context, err := utils.NewServiceFromContext(request, constants.CONTEXT_PARAMS, constants.CONTEXT_LOGGER, constants.CONTEXT_CORE)
 	if err != nil {
 		context.Log.WithFields(logrus.Fields{
-			"event":      "phlapi::UserController::GetPerson - Failed to get value from context",
+			"event":      "phlapi::UserController::GetUserById - Failed to get value from context",
 			"stackTrace": string(debug.Stack()),
 		}).Error(err)
 		return
 	}
 
-	userEmail := request.URL.Query().Get("userEmail")
-	if len(userEmail) <= 0 {
-		http.Error(writer, `{"error": "User email is required"}`, http.StatusInternalServerError)
+	userId, err := strconv.Atoi(context.Params.ByName("userId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid id was provided"}`, http.StatusBadRequest)
 		return
 	}
 
-	user, err := context.Core.UserService.GetUserByEmail(userEmail)
+	user, err := context.Core.UserService.GetUserById(userId)
 	if err != nil {
 		http.Error(writer, `{"error": "Internal Server Error"}`, http.StatusInternalServerError)
 		return
