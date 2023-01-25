@@ -24,7 +24,7 @@ func (middleware *Middleware) OptionsMiddleware(handler http.Handler) http.Handl
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Access-Control-Allow-Origin", "*")
 		writer.Header().Set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE")
-		writer.Header().Set("Access-Control-Allow-Headers", "Origin, X-Forwarded-For, X-Requested-With, Content-Type, Accept, Authorization, UUID, STREAMING_AUTH_TOKEN")
+		writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 		writer.Header().Set("Content-Type", "application/json")
 
 		// Set the correct remote address as it could be a forwarded address through a proxy
@@ -40,7 +40,7 @@ func (middleware *Middleware) CORSMiddleware(handler http.Handler) http.Handler 
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Access-Control-Allow-Origin", "*")
 		writer.Header().Set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS")
-		writer.Header().Set("Access-Control-Allow-Headers", "Origin, X-Forwarded-For, X-Requested-With, Content-Type, Accept, Authorization, UUID, STREAMING_AUTH_TOKEN")
+		writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 		writer.Header().Set("Content-Type", "application/json")
 
 		// Set the correct remote address as it could be a forwarded address through a proxy
@@ -77,7 +77,7 @@ func (middleware *Middleware) CoreApplicationServiceMiddleware(handler http.Hand
 		co, err := core.CreateCore(db)
 		if err != nil {
 			service.Log.WithFields(logrus.Fields{
-				"event":      "phlapi::CoreApplicationServiceMiddleware - Failed to create BACore instance",
+				"event":      "phlapi::CoreApplicationServiceMiddleware - Failed to create Core instance",
 				"stackTrace": string(debug.Stack()),
 			}).Error(err)
 
@@ -87,18 +87,18 @@ func (middleware *Middleware) CoreApplicationServiceMiddleware(handler http.Hand
 
 		co.SetLoggerEntry(service.Log)
 		co.Begin()
-		defer rollbackBACoreApplicationService(co, service.Log)
+		defer rollbackCoreApplicationService(co, service.Log)
 
 		context.Set(request, constants.CONTEXT_CORE, co)
 		handler.ServeHTTP(writer, request)
 	})
 }
 
-func rollbackBACoreApplicationService(co *models.Core, log *logrus.Entry) {
+func rollbackCoreApplicationService(co *models.Core, log *logrus.Entry) {
 	err := co.Rollback()
 	if err != nil {
 		log.WithFields(logrus.Fields{
-			"event":      "V2::rollbackBACoreApplicationService - Failed when trying to rollback BACore",
+			"event":      "phlapi::rollbackCoreApplicationService - Failed when trying to rollback Core",
 			"stackTrace": string(debug.Stack()),
 		}).Error(err)
 	}
