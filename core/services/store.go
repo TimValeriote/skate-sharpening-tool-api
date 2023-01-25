@@ -23,7 +23,7 @@ func StoreStoreSetup(db *models.CoreDatabase, log *logrus.Entry) *storeStore {
 }
 
 func (store *storeStore) GetAllStores() ([]models.StoreStruct, error) {
-	sql := `SELECT id, name, address, city, country, phone_number FROM store`
+	sql := `SELECT id, name, address, city, country, phone_number, store_number FROM store`
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
 		store.log.WithFields(logrus.Fields{
@@ -59,6 +59,7 @@ func getStoreFromQuery(query *sql.Stmt) ([]models.StoreStruct, error) {
 			&store.City,
 			&store.Country,
 			&store.PhoneNumber,
+			&store.StoreNumber,
 		)
 		if err != nil {
 			return nil, err

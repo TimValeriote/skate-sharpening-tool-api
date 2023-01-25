@@ -33,6 +33,7 @@ type UserSkatesInfoStruct struct {
 	HasGuards       bool             `json:"has_guards"`
 	GuardColour     ColourInfoStruct `json:"guard_colour"`
 	PreferredRadius string           `json:"preferred_radius"`
+	Fit             FitInfoStruct    `json:"fit"`
 }
 
 func (controller UserSkateController) GetAllUserSkatesByUserID(writer http.ResponseWriter, request *http.Request) {
@@ -83,6 +84,7 @@ func ConstructUserSkatesResponse(userSkates []models.UserSkateStruct) UserSkateR
 		userReponse.HasSteel = userSkate.HasSteel
 		userReponse.HasGuards = userSkate.HasGuards
 		userReponse.GuardColour = ConstructColourStructResponse(userSkate.GuardColour)
+		userReponse.Fit = ConstructFitStructResponse(userSkate.Fit)
 		userReponse.PreferredRadius = userSkate.PreferredRadius
 		skatesArray = append(skatesArray, userReponse)
 	}
@@ -96,6 +98,5 @@ func ConstructSkatesResponse(skate models.SkateStruct) SkateInfoStruct {
 		ID:    skate.ID,
 		Model: ConstructModelStructResponse(skate.Model),
 		Brand: ConstructBrandStructResponse(skate.Brand),
-		Fit:   ConstructFitStructResponse(skate.Fit),
 	}
 }

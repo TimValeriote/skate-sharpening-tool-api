@@ -30,27 +30,15 @@ func (store *skateStore) GetAllSkates() ([]models.SkateStruct, error) {
 					skate_model.name, 
 					skate_model.alias,
 
-					skate_model_brand.id,
-					skate_model_brand.name, 
-					skate_model_brand.short_name, 
-					skate_model_brand.is_skate, 
-					skate_model_brand.is_steel, 
-					skate_model_brand.is_holder,
-
 					skate_brand.id,
 					skate_brand.name, 
 					skate_brand.short_name, 
 					skate_brand.is_skate, 
 					skate_brand.is_steel, 
 					skate_brand.is_holder,
-
-					skate_fit.id,
-					skate_fit.name
 			FROM skates
 			INNER JOIN model AS skate_model ON skates.model_id = skate_model.id
-			INNER JOIN brands AS skate_model_brand ON skate_model.brand_id = skate_model_brand.id
-			INNER JOIN brands AS skate_brand ON skates.brand_id = skate_brand.id
-			INNER JOIN fits AS skate_fit ON skates.fit_id = skate_fit.id`
+			INNER JOIN brands AS skate_brand ON skates.brand_id = skate_brand.id`
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
 		store.log.WithFields(logrus.Fields{
@@ -81,11 +69,8 @@ func getSkatesFromQuery(query *sql.Stmt) ([]models.SkateStruct, error) {
 		var skate models.SkateStruct
 
 		var model models.ModelStruct
-		var skate_model_brand models.BrandStruct
 
 		var skate_brand models.BrandStruct
-
-		var fit models.FitStruct
 
 		err = rows.Scan(
 			&skate.ID,
@@ -94,31 +79,19 @@ func getSkatesFromQuery(query *sql.Stmt) ([]models.SkateStruct, error) {
 			&model.Name,
 			&model.Alias,
 
-			&skate_model_brand.ID,
-			&skate_model_brand.Name,
-			&skate_model_brand.ShortName,
-			&skate_model_brand.IsSteel,
-			&skate_model_brand.IsSkate,
-			&skate_model_brand.IsHolder,
-
 			&skate_brand.ID,
 			&skate_brand.Name,
 			&skate_brand.ShortName,
 			&skate_brand.IsSteel,
 			&skate_brand.IsSkate,
 			&skate_brand.IsHolder,
-
-			&fit.ID,
-			&fit.Name,
 		)
 		if err != nil {
 			return nil, err
 		}
 
-		model.Brand = skate_model_brand
 		skate.Model = model
 		skate.Brand = skate_brand
-		skate.Fit = fit
 
 		skatesArray = append(skatesArray, skate)
 	}

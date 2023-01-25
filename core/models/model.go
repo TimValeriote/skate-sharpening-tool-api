@@ -4,7 +4,6 @@ type ModelStruct struct {
 	ID    int
 	Name  string
 	Alias string
-	Brand BrandStruct
 }
 
 type ModelService interface {

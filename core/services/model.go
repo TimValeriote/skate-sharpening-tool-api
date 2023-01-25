@@ -27,15 +27,7 @@ func (store *modelStore) GetAllModels() ([]models.ModelStruct, error) {
 					model.id, 
 					model.name, 
 					model.alias,
-
-					brand.id,
-					brand.name, 
-					brand.short_name, 
-					brand.is_skate, 
-					brand.is_steel, 
-					brand.is_holder
-			FROM model
-			INNER JOIN brands AS brand ON model.brand_id = brand.id`
+			FROM model`
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
 		store.log.WithFields(logrus.Fields{
@@ -59,15 +51,7 @@ func (store *modelStore) GetModelById(modelId int) ([]models.ModelStruct, error)
 					model.id, 
 					model.name, 
 					model.alias,
-
-					brand.id,
-					brand.name, 
-					brand.short_name, 
-					brand.is_skate, 
-					brand.is_steel, 
-					brand.is_holder
 			FROM model
-			INNER JOIN brands AS brand ON model.brand_id = brand.id
 			WHERE model.id = ?`
 
 	query, err := store.database.Tx.Prepare(sql)
@@ -89,24 +73,14 @@ func (store *modelStore) GetModelById(modelId int) ([]models.ModelStruct, error)
 	modelsArray := make([]models.ModelStruct, 0)
 	for rows.Next() {
 		var model models.ModelStruct
-		var brand models.BrandStruct
 		err = rows.Scan(
 			&model.ID,
 			&model.Name,
 			&model.Alias,
-
-			&brand.ID,
-			&brand.Name,
-			&brand.ShortName,
-			&brand.IsSteel,
-			&brand.IsSkate,
-			&brand.IsHolder,
 		)
 		if err != nil {
 			return nil, err
 		}
-
-		model.Brand = brand
 		modelsArray = append(modelsArray, model)
 	}
 
@@ -127,25 +101,14 @@ func getModelsFromQuery(query *sql.Stmt) ([]models.ModelStruct, error) {
 	modelsArray := make([]models.ModelStruct, 0)
 	for rows.Next() {
 		var model models.ModelStruct
-		var brand models.BrandStruct
 		err = rows.Scan(
 			&model.ID,
 			&model.Name,
 			&model.Alias,
-
-			&brand.ID,
-			&brand.Name,
-			&brand.ShortName,
-			&brand.IsSteel,
-			&brand.IsSkate,
-			&brand.IsHolder,
 		)
 		if err != nil {
 			return nil, err
 		}
-
-		model.Brand = brand
-
 		modelsArray = append(modelsArray, model)
 	}
 

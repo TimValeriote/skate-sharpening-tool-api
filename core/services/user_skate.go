@@ -39,13 +39,6 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 				skate_brand.is_steel,
 				skate_brand.is_holder,
 
-				skate_model_brand.id, 
-				skate_model_brand.name, 
-				skate_model_brand.short_name,
-				skate_model_brand.is_skate,
-				skate_model_brand.is_steel,
-				skate_model_brand.is_holder,
-
 				holder_brand.id,
 				holder_brand.name,
 				holder_brand.short_name,
@@ -56,8 +49,8 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 				user_skates.holder_size,
 				user_skates.skate_size,
 
-				skate_fit.id,
-				skate_fit.name,
+				user_skate_fit.id,
+				user_skate_fit.name,
 
 				lace_colour.id,
 				lace_colour.colour,
@@ -80,9 +73,8 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 			INNER JOIN skates as skate ON user_skates.skate_id = skate.id
 			INNER JOIN model as skate_model ON skate.model_id = skate_model.id
 			INNER JOIN brands as skate_brand ON skate.brand_id = skate_brand.id
-			INNER JOIN brands as skate_model_brand ON skate_model.brand_id = skate_model_brand.id
 			INNER JOIN brands as holder_brand ON user_skates.holder_brand_id = holder_brand.id
-			INNER JOIN fits as skate_fit ON skate.fit_id = skate_fit.id
+			INNER JOIN fits as user_skate_fit ON user_skates.fit_id = user_skate_fit.id
 			INNER JOIN colour as lace_colour ON user_skates.lace_colour_id = lace_colour.id
 			INNER JOIN brands as steel_brand ON user_skates.steel_id = steel_brand.id
 			LEFT JOIN colour as guard_colour ON user_skates.guard_colour_id = guard_colour.id
@@ -111,17 +103,16 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 		var skate models.SkateStruct
 		var skateBrand models.BrandStruct
 		var skateModel models.ModelStruct
-		var skateModelBrand models.BrandStruct
 
 		var holder models.BrandStruct
-
-		var skateFit models.FitStruct
 
 		var laceColour models.ColourStruct
 
 		var skate_steel models.BrandStruct
 
 		var guardColour models.ColourStruct
+
+		var fit models.FitStruct
 
 		err = rows.Scan(
 			&userSkate.ID,
@@ -139,13 +130,6 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 			&skateBrand.IsSteel,
 			&skateBrand.IsHolder,
 
-			&skateModelBrand.ID,
-			&skateModelBrand.Name,
-			&skateModelBrand.ShortName,
-			&skateModelBrand.IsSkate,
-			&skateModelBrand.IsSteel,
-			&skateModelBrand.IsHolder,
-
 			&holder.ID,
 			&holder.Name,
 			&holder.ShortName,
@@ -156,8 +140,8 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 			&userSkate.HolderSize,
 			&userSkate.SkateSize,
 
-			&skateFit.ID,
-			&skateFit.Name,
+			&fit.ID,
+			&fit.Name,
 
 			&laceColour.ID,
 			&laceColour.Colour,
@@ -181,9 +165,8 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 		}
 
 		skate.Model = skateModel
-		skate.Model.Brand = skateModelBrand
 		skate.Brand = skateBrand
-		skate.Fit = skateFit
+		userSkate.Fit = fit
 
 		userSkate.Skate = skate
 		userSkate.Holder = holder

@@ -24,7 +24,6 @@ type SkateInfoStruct struct {
 	ID    int             `json:"id"`
 	Model ModelInfoStruct `json:"model"`
 	Brand BrandInfoStruct `json:"brand"`
-	Fit   FitInfoStruct   `json:"fit"`
 }
 
 func (controller SkateController) GetSkates(writer http.ResponseWriter, request *http.Request) {
@@ -72,6 +71,5 @@ func ConstructSkateStructResponse(skate models.SkateStruct) SkateInfoStruct {
 		ID:    skate.ID,
 		Model: ConstructModelStructResponse(skate.Model),
 		Brand: ConstructBrandStructResponse(skate.Brand),
-		Fit:   ConstructFitStructResponse(skate.Fit),
 	}
 }

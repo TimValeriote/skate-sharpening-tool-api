@@ -22,10 +22,9 @@ type ModelResponse struct {
 }
 
 type ModelInfoStruct struct {
-	ID    int             `json:"id"`
-	Name  string          `json:"name"`
-	Alias string          `json:"alias"`
-	Brand BrandInfoStruct `json:"brand"`
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Alias string `json:"alias"`
 }
 
 func (controller ModelController) GetModels(writer http.ResponseWriter, request *http.Request) {
@@ -103,6 +102,5 @@ func ConstructModelStructResponse(model models.ModelStruct) ModelInfoStruct {
 		ID:    model.ID,
 		Name:  model.Name,
 		Alias: model.Alias,
-		Brand: ConstructBrandStructResponse(model.Brand),
 	}
 }

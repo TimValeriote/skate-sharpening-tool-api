@@ -25,15 +25,13 @@ CREATE TABLE `brands` (
 CREATE TABLE `skates` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `model_id` int,
-  `brand_id` int,
-  `fit_id` int
+  `brand_id` int
 );
 
 CREATE TABLE `model` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
-  `alias` varchar(255),
-  `brand_id` int
+  `alias` varchar(255)
 );
 
 CREATE TABLE `colour` (
@@ -52,7 +50,8 @@ CREATE TABLE `store` (
   `address` varchar(255),
   `city` varchar(255),
   `country` varchar(255),
-  `phone_number` varchar(255)
+  `phone_number` varchar(255),
+  `store_number` int
 );
 
 CREATE TABLE `open_sharpenings` (
@@ -74,6 +73,7 @@ CREATE TABLE `user_skates` (
   `steel_id` int,
   `has_guards` tinyint(1),
   `guard_colour_id` int,
+  `fit_id` int,
   `preferred_radius` varchar(255)
 );
 
@@ -90,9 +90,7 @@ ALTER TABLE `skates` ADD FOREIGN KEY (`model_id`) REFERENCES `model` (`id`);
 
 ALTER TABLE `skates` ADD FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`);
 
-ALTER TABLE `skates` ADD FOREIGN KEY (`fit_id`) REFERENCES `fits` (`id`);
-
-ALTER TABLE `model` ADD FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`);
+ALTER TABLE `user_skates` ADD FOREIGN KEY (`fit_id`) REFERENCES `fits` (`id`);
 
 ALTER TABLE `open_sharpenings` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 

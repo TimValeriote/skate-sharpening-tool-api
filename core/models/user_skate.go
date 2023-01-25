@@ -12,6 +12,7 @@ type UserSkateStruct struct {
 	HasGuards       bool
 	GuardColour     ColourStruct
 	PreferredRadius string
+	Fit             FitStruct
 }
 
 type UserSkateService interface {

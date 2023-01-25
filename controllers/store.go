@@ -27,6 +27,7 @@ type StoreInfoStruct struct {
 	City        string `json:"city"`
 	Country     string `json:"country"`
 	PhoneNumber string `json:"phone_number"`
+	StoreNumber string `json:"store_number"`
 }
 
 func (controller StoreController) GetStores(writer http.ResponseWriter, request *http.Request) {

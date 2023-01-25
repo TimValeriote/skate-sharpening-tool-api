@@ -7,6 +7,7 @@ type StoreStruct struct {
 	City        string
 	Country     string
 	PhoneNumber string
+	StoreNumber string
 }
 
 type StoreService interface {
