@@ -5,7 +5,7 @@ CREATE TABLE `users` (
   `email` varchar(255),
   `phone_number` varchar(255),
   `uuid` varchar(255),
-  `is_staff` tinyint(1)
+  `is_staff` tinyint(1) NOT NULL DEFAULT 0
 );
 
 CREATE TABLE `staff` (

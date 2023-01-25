@@ -1,7 +1,7 @@
 package core
 
 import (
-	//"database/sql"
+	"database/sql"
 	//"fmt"
 	"runtime/debug"
 	//"strings"
@@ -63,6 +63,7 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 				steel_brand.is_holder,
 
 				user_skates.has_guards,
+				user_skates.has_steel,
 
 				guard_colour.id,
 				guard_colour.colour,
@@ -154,6 +155,7 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 			&skate_steel.IsHolder,
 
 			&userSkate.HasGuards,
+			&userSkate.HasSteel,
 
 			&guardColour.ID,
 			&guardColour.Colour,
@@ -225,6 +227,7 @@ func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, user
 				steel_brand.is_holder,
 
 				user_skates.has_guards,
+				user_skates.has_steel,
 
 				guard_colour.id,
 				guard_colour.colour,
@@ -316,6 +319,7 @@ func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, user
 			&skate_steel.IsHolder,
 
 			&userSkate.HasGuards,
+			&userSkate.HasSteel,
 
 			&guardColour.ID,
 			&guardColour.Colour,
@@ -344,4 +348,109 @@ func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, user
 	}
 
 	return skates, nil
+}
+
+func (store *userSkateStore) CreateUserSkate(userSkateResponse *models.CreateUserSkateStruct) (userSkateId int, err error) {
+	sql := `INSERT INTO user_skates (
+		user_id,
+		skate_id,
+		holder_brand_id,
+		holder_size,
+		skate_size,
+		lace_colour_id,
+		has_steel,
+		steel_id,
+		has_guards,
+		guard_colour_id,
+		fit_id,
+		preferred_radius
+	) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`
+
+	sqlStmt, err := store.database.Tx.Prepare(sql)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userSkateStore::CreateUserSkate - Failed to prepare CreateUserSkate SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	res, err := sqlStmt.Exec(
+		userSkateResponse.UserID,
+		userSkateResponse.SkateID,
+		userSkateResponse.HolderBrandID,
+		userSkateResponse.HolderSize,
+		userSkateResponse.SkateSize,
+		userSkateResponse.LaceColourID,
+		userSkateResponse.HasSteel,
+		userSkateResponse.SteelID,
+		userSkateResponse.HasGuards,
+		userSkateResponse.GuardColourID,
+		userSkateResponse.FitID,
+		userSkateResponse.PreferredRadius,
+	)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userSkateStore::CreateUserSkate - Failed to execute CreateUserSkate SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	insertedId, err := res.LastInsertId()
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userSkateStore::CreateUserSkate - Failed to get the last inserted id",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	userSkateId = int(insertedId)
+
+	return
+}
+
+func (store *userSkateStore) UpdateUserSkate(userSkate models.UpdateUserSkateStruct) (result sql.Result, err error) {
+	sql := `UPDATE user_skates SET 
+					skate_id = ?, 
+					holder_brand_id = ?,
+					holder_size = ?,
+					skate_size = ?,
+					lace_colour_id = ?,
+					has_steel = ?,
+					steel_id = ?,
+					has_guards = ?,
+					guard_colour_id = ?,
+					fit_id = ?,
+					preferred_radius = ?
+			WHERE id = ?`
+
+	result, err = store.database.Tx.Exec(sql,
+		userSkate.SkateID,
+		userSkate.HolderBrandID,
+		userSkate.HolderSize,
+		userSkate.SkateSize,
+		userSkate.LaceColourID,
+		userSkate.HasSteel,
+		userSkate.SteelID,
+		userSkate.HasGuards,
+		userSkate.GuardColourID,
+		userSkate.FitID,
+		userSkate.PreferredRadius,
+		userSkate.UserSkateID,
+	)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userSkateStore::UpdateUserSkate - Failed to execute UpdateUserSkate SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	return
 }

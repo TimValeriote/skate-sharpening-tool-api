@@ -85,10 +85,8 @@ func ConstructColourResponse(colours []models.ColourStruct) ColoursResponse {
 	coloursArray := make([]ColourInfoStruct, 0)
 	for _, colour := range colours {
 		var colourReponse ColourInfoStruct
-		if !colour.ID.Valid {
-			colourReponse.ID = 0
-		}
-		colourReponse.Colour = colour.Colour.ValueOrZero()
+		colourReponse.ID = colour.ID
+		colourReponse.Colour = colour.Colour
 		coloursArray = append(coloursArray, colourReponse)
 	}
 
@@ -98,9 +96,19 @@ func ConstructColourResponse(colours []models.ColourStruct) ColoursResponse {
 
 func ConstructColourStructResponse(colour models.ColourStruct) ColourInfoStruct {
 	var colourReponse ColourInfoStruct
-	if !colour.ID.Valid {
+	colourReponse.ID = colour.ID
+	colourReponse.Colour = colour.Colour
+	return colourReponse
+}
+
+func ConstructColourStructResponseBasedOnBool(colour models.ColourStruct, isColour bool) ColourInfoStruct {
+	var colourReponse ColourInfoStruct
+	if !isColour {
 		colourReponse.ID = 0
+		colourReponse.Colour = "null"
+	} else {
+		colourReponse.ID = colour.ID
+		colourReponse.Colour = colour.Colour
 	}
-	colourReponse.Colour = colour.Colour.ValueOrZero()
 	return colourReponse
 }

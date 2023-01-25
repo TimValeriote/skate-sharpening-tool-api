@@ -87,6 +87,82 @@ func (store *userStore) GetUserById(userId int) ([]models.UsersStruct, error) {
 	return users, nil
 }
 
+func (store *userStore) CreateUser(userResponse *models.UsersStruct) (userId int, err error) {
+	sql := `INSERT INTO users (
+		first_name, 
+		last_name, 
+		email, 
+		phone_number, 
+		uuid
+	) VALUES (?,?,?,?,?)`
+
+	sqlStmt, err := store.database.Tx.Prepare(sql)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userStore::CreateUser - Failed to prepare CreateUser SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	res, err := sqlStmt.Exec(
+		userResponse.FirstName,
+		userResponse.LastName,
+		userResponse.Email,
+		userResponse.PhoneNumber,
+		userResponse.UUID,
+	)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userStore::CreateUser - Failed to execute CreateUser SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	insertedId, err := res.LastInsertId()
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userStore::CreateUser - Failed to get the last inserted id",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	userId = int(insertedId)
+
+	return
+}
+
+func (store *userStore) UpdateUser(user models.UpdateUserStruct) (result sql.Result, err error) {
+	sql := `UPDATE users SET 
+					first_name = ?, 
+					last_name = ?,
+					email = ?,
+					phone_number = ?
+			WHERE id = ?`
+
+	result, err = store.database.Tx.Exec(sql,
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.PhoneNumber,
+		user.UserID)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userStore::UpdateUser - Failed to execute UpdateUser SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	return
+}
+
 func getUsersFromQuery(query *sql.Stmt) ([]models.UsersStruct, error) {
 	rows, err := query.Query()
 	if err != nil {
