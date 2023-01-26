@@ -1,5 +1,9 @@
 package models
 
+import (
+	"database/sql"
+)
+
 type UserSkateStruct struct {
 	ID              int
 	Skate           SkateStruct
@@ -15,6 +19,39 @@ type UserSkateStruct struct {
 	Fit             FitStruct
 }
 
+type CreateUserSkateStruct struct {
+	UserID          int
+	SkateID         string
+	HolderBrandID   string
+	HolderSize      string
+	SkateSize       string
+	LaceColourID    string
+	HasSteel        string
+	SteelID         string
+	HasGuards       string
+	GuardColourID   string
+	PreferredRadius string
+	FitID           string
+}
+
+type UpdateUserSkateStruct struct {
+	UserSkateID     int
+	SkateID         string
+	HolderBrandID   string
+	HolderSize      string
+	SkateSize       string
+	LaceColourID    string
+	HasSteel        string
+	SteelID         string
+	HasGuards       string
+	GuardColourID   string
+	PreferredRadius string
+	FitID           string
+}
+
 type UserSkateService interface {
 	GetAllUserSkatesByUserID(userId int) ([]UserSkateStruct, error)
+	GetUserSkateByUserIdAndUserSkateId(userId int, userSkateId int) ([]UserSkateStruct, error)
+	CreateUserSkate(userSkate *CreateUserSkateStruct) (int, error)
+	UpdateUserSkate(userSkate UpdateUserSkateStruct) (sql.Result, error)
 }

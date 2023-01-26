@@ -42,20 +42,20 @@ func (store *colourStore) GetAllColours() ([]models.ColourStruct, error) {
 	return ret, nil
 }
 
-func (store *colourStore) GetColourByName(colourName string) ([]models.ColourStruct, error) {
-	sql := `SELECT id, colour FROM colour WHERE colour = ?`
+func (store *colourStore) GetColourById(colourId int) ([]models.ColourStruct, error) {
+	sql := `SELECT id, colour FROM colour WHERE id = ?`
 
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
 		store.log.WithFields(logrus.Fields{
-			"event":      "colourStore::GetColourByName - Failed to prepare GetColourByName SELECT query.",
+			"event":      "colourStore::GetColourById - Failed to prepare GetColourById SELECT query.",
 			"stackTrace": string(debug.Stack()),
 		}).Error(err)
 		return nil, err
 	}
 	defer query.Close()
 
-	rows, err := query.Query(colourName)
+	rows, err := query.Query(colourId)
 	if err != nil {
 		return nil, err
 	}

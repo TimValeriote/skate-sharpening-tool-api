@@ -42,20 +42,20 @@ func (store *userStore) GetAllUsers() ([]models.UsersStruct, error) {
 	return ret, nil
 }
 
-func (store *userStore) GetUserByEmail(userEmail string) ([]models.UsersStruct, error) {
-	sql := `SELECT id, first_name, last_name, email, phone_number, uuid, is_staff FROM users WHERE email = ?`
+func (store *userStore) GetUserById(userId int) ([]models.UsersStruct, error) {
+	sql := `SELECT id, first_name, last_name, email, phone_number, uuid, is_staff FROM users WHERE id = ?`
 
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
 		store.log.WithFields(logrus.Fields{
-			"event":      "userStore::GetUserByEmail - Failed to prepare GetUserByEmail SELECT query.",
+			"event":      "userStore::GetUserById - Failed to prepare GetUserById SELECT query.",
 			"stackTrace": string(debug.Stack()),
 		}).Error(err)
 		return nil, err
 	}
 	defer query.Close()
 
-	rows, err := query.Query(userEmail)
+	rows, err := query.Query(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -85,6 +85,82 @@ func (store *userStore) GetUserByEmail(userEmail string) ([]models.UsersStruct, 
 	}
 
 	return users, nil
+}
+
+func (store *userStore) CreateUser(userResponse *models.UsersStruct) (userId int, err error) {
+	sql := `INSERT INTO users (
+		first_name, 
+		last_name, 
+		email, 
+		phone_number, 
+		uuid
+	) VALUES (?,?,?,?,?)`
+
+	sqlStmt, err := store.database.Tx.Prepare(sql)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userStore::CreateUser - Failed to prepare CreateUser SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	res, err := sqlStmt.Exec(
+		userResponse.FirstName,
+		userResponse.LastName,
+		userResponse.Email,
+		userResponse.PhoneNumber,
+		userResponse.UUID,
+	)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userStore::CreateUser - Failed to execute CreateUser SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	insertedId, err := res.LastInsertId()
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userStore::CreateUser - Failed to get the last inserted id",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	userId = int(insertedId)
+
+	return
+}
+
+func (store *userStore) UpdateUser(user models.UpdateUserStruct) (result sql.Result, err error) {
+	sql := `UPDATE users SET 
+					first_name = ?, 
+					last_name = ?,
+					email = ?,
+					phone_number = ?
+			WHERE id = ?`
+
+	result, err = store.database.Tx.Exec(sql,
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.PhoneNumber,
+		user.UserID)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userStore::UpdateUser - Failed to execute UpdateUser SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	return
 }
 
 func getUsersFromQuery(query *sql.Stmt) ([]models.UsersStruct, error) {
