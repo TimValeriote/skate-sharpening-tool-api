@@ -14,7 +14,7 @@ import (
 
 func SetupRouting(router *httprouter.Router, database *sql.DB, log *logrus.Logger) {
 	middleware := InitMiddleware(database, log)
-	api := apibuilder.NewApi("/phlapi", router, alice.New(context.ClearHandler, middleware.CORSMiddleware), alice.New(context.ClearHandler, middleware.OptionsMiddleware), log)
+	api := apibuilder.NewApi("/sstapi", router, alice.New(context.ClearHandler, middleware.CORSMiddleware), alice.New(context.ClearHandler, middleware.OptionsMiddleware), log)
 
 	api.Routes = []apibuilder.Route{
 		{"GET", "/index", controllers.IndexController{Log: log}.Index, alice.New()},
