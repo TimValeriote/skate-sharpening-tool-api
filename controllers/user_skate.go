@@ -237,6 +237,24 @@ func ConstructUserSkatesResponse(userSkates []models.UserSkateStruct) UserSkateR
 	return response
 }
 
+func ConstructUserSkatesInfoResponse(userSkate models.UserSkateStruct) UserSkatesInfoStruct {
+	var userSkateResponse UserSkatesInfoStruct
+	userSkateResponse.ID = userSkate.ID
+	userSkateResponse.Skate = ConstructSkatesResponse(userSkate.Skate)
+	userSkateResponse.Holder = ConstructBrandStructResponse(userSkate.Holder)
+	userSkateResponse.HolderSize = userSkate.HolderSize
+	userSkateResponse.SkateSize = userSkate.SkateSize
+	userSkateResponse.LaceColour = ConstructColourStructResponse(userSkate.LaceColour)
+	userSkateResponse.HasSteel = userSkate.HasSteel
+	userSkateResponse.HasGuards = userSkate.HasGuards
+	userSkateResponse.Steel = ConstructBrandStructResponse(userSkate.Steel)
+	userSkateResponse.GuardColour = ConstructColourStructResponseBasedOnBool(userSkate.GuardColour, userSkate.HasGuards)
+	userSkateResponse.Fit = ConstructFitStructResponse(userSkate.Fit)
+	userSkateResponse.PreferredRadius = userSkate.PreferredRadius
+
+	return userSkateResponse
+}
+
 func ConstructSkatesResponse(skate models.SkateStruct) SkateInfoStruct {
 	return SkateInfoStruct{
 		ID:    skate.ID,

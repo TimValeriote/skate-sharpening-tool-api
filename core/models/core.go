@@ -117,4 +117,6 @@ type Core struct {
 	SkateService SkateService
 
 	StoreService StoreService
+
+	SharpeningService SharpeningService
 }

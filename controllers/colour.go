@@ -23,7 +23,7 @@ type ColoursResponse struct {
 
 type ColourInfoStruct struct {
 	ID     int    `json:"id"`
-	Colour string `json:"Colour"`
+	Colour string `json:"colour"`
 }
 
 func (controller ColourController) GetColours(writer http.ResponseWriter, request *http.Request) {
