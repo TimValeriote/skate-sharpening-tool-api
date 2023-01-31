@@ -26,7 +26,8 @@ func SetupRouting(router *httprouter.Router, database *sql.DB, log *logrus.Logge
 		{"PUT", "/people/update/:personId", controllers.PeopleController{Log: log}.UpdatePersonByID, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 
 		{"GET", "/users", controllers.UserController{Log: log}.GetUsers, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
-		{"GET", "/user/:userId", controllers.UserController{Log: log}.GetUserById, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"GET", "/user/byid/:userId", controllers.UserController{Log: log}.GetUserById, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"GET", "/user/byemail", controllers.UserController{Log: log}.GetUserByEmail, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"POST", "/users/new", controllers.UserController{Log: log}.CreateUser, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"PUT", "/users/update/:userId", controllers.UserController{Log: log}.UpdateUser, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 

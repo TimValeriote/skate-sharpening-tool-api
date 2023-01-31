@@ -24,7 +24,8 @@ type UpdateUserStruct struct {
 
 type UserService interface {
 	GetAllUsers() ([]UsersStruct, error)
-	GetUserById(userId int) ([]UsersStruct, error)
+	GetUserById(userId int) (UsersStruct, error)
+	GetUserByEmail(userEmail string) (UsersStruct, error)
 	CreateUser(user *UsersStruct) (int, error)
 	UpdateUser(user UpdateUserStruct) (sql.Result, error)
 }

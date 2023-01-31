@@ -78,7 +78,39 @@ func (controller UserController) GetUserById(writer http.ResponseWriter, request
 		return
 	}
 
-	response := ConstructUsersResponse(user)
+	response := ConstructUserInfoResponse(user)
+
+	context.Core.Commit()
+
+	writer.WriteHeader(http.StatusOK)
+	json.NewEncoder(writer).Encode(response)
+}
+
+func (controller UserController) GetUserByEmail(writer http.ResponseWriter, request *http.Request) {
+	context, err := utils.NewServiceFromContext(request, constants.CONTEXT_PARAMS, constants.CONTEXT_LOGGER, constants.CONTEXT_CORE)
+	if err != nil {
+		context.Log.WithFields(logrus.Fields{
+			"event":      "phlapi::UserController::GetUserByEmail - Failed to get value from context",
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	userEmail := request.URL.Query().Get("user_email")
+	if len(userEmail) <= 0 {
+		http.Error(writer, `{"error": "No valid user email was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	fmt.Println(userEmail)
+
+	user, err := context.Core.UserService.GetUserByEmail(userEmail)
+	if err != nil {
+		http.Error(writer, `{"error": "Internal Server Error"}`, http.StatusInternalServerError)
+		return
+	}
+
+	response := ConstructUserInfoResponse(user)
 
 	context.Core.Commit()
 

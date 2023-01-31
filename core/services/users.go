@@ -42,8 +42,10 @@ func (store *userStore) GetAllUsers() ([]models.UsersStruct, error) {
 	return ret, nil
 }
 
-func (store *userStore) GetUserById(userId int) ([]models.UsersStruct, error) {
+func (store *userStore) GetUserById(userId int) (models.UsersStruct, error) {
 	sql := `SELECT id, first_name, last_name, email, phone_number, uuid, is_staff FROM users WHERE id = ?`
+
+	var userById models.UsersStruct
 
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
@@ -51,40 +53,85 @@ func (store *userStore) GetUserById(userId int) ([]models.UsersStruct, error) {
 			"event":      "userStore::GetUserById - Failed to prepare GetUserById SELECT query.",
 			"stackTrace": string(debug.Stack()),
 		}).Error(err)
-		return nil, err
+		return userById, err
 	}
 	defer query.Close()
 
 	rows, err := query.Query(userId)
 	if err != nil {
-		return nil, err
+		return userById, err
 	}
 	defer rows.Close()
 
 	users := make([]models.UsersStruct, 0)
 	for rows.Next() {
-		var user models.UsersStruct
 		err = rows.Scan(
-			&user.ID,
-			&user.FirstName,
-			&user.LastName,
-			&user.Email,
-			&user.PhoneNumber,
-			&user.UUID,
-			&user.IsStaff,
+			&userById.ID,
+			&userById.FirstName,
+			&userById.LastName,
+			&userById.Email,
+			&userById.PhoneNumber,
+			&userById.UUID,
+			&userById.IsStaff,
 		)
 		if err != nil {
-			return nil, err
+			return userById, err
 		}
 
-		users = append(users, user)
+		users = append(users, userById)
 	}
 
 	if rows.Err() != nil {
-		return nil, err
+		return userById, err
 	}
 
-	return users, nil
+	return userById, nil
+}
+
+func (store *userStore) GetUserByEmail(userEmail string) (models.UsersStruct, error) {
+	sql := `SELECT id, first_name, last_name, email, phone_number, uuid, is_staff FROM users WHERE email = ?`
+
+	var userByEmail models.UsersStruct
+
+	query, err := store.database.Tx.Prepare(sql)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userStore::GetUserByEmail - Failed to prepare GetUserByEmail SELECT query.",
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return userByEmail, err
+	}
+	defer query.Close()
+
+	rows, err := query.Query(userEmail)
+	if err != nil {
+		return userByEmail, err
+	}
+	defer rows.Close()
+
+	users := make([]models.UsersStruct, 0)
+	for rows.Next() {
+		err = rows.Scan(
+			&userByEmail.ID,
+			&userByEmail.FirstName,
+			&userByEmail.LastName,
+			&userByEmail.Email,
+			&userByEmail.PhoneNumber,
+			&userByEmail.UUID,
+			&userByEmail.IsStaff,
+		)
+		if err != nil {
+			return userByEmail, err
+		}
+
+		users = append(users, userByEmail)
+	}
+
+	if rows.Err() != nil {
+		return userByEmail, err
+	}
+
+	return userByEmail, nil
 }
 
 func (store *userStore) CreateUser(userResponse *models.UsersStruct) (userId int, err error) {
