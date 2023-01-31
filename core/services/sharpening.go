@@ -2,9 +2,7 @@ package core
 
 import (
 	"database/sql"
-	"fmt"
 	"runtime/debug"
-	//"strings"
 
 	"github.com/sirupsen/logrus"
 	"phl-skate-sharpening-api/core/models"
@@ -34,8 +32,6 @@ func (store *sharpeningStore) GetOpenSharpeningsForUser(userId int) ([]models.Sh
 	}
 	defer query.Close()
 
-	fmt.Println("yes sirrrrr")
-
 	ret, err := getSharpeningsFromQuery(query, userId)
 	if err != nil {
 		return nil, err
@@ -43,102 +39,6 @@ func (store *sharpeningStore) GetOpenSharpeningsForUser(userId int) ([]models.Sh
 
 	return ret, nil
 }
-
-/*func (store *sharpeningStore) GetUserById(userId int) (models.UsersStruct, error) {
-	sql := `SELECT id, first_name, last_name, email, phone_number, uuid, is_staff FROM users WHERE id = ?`
-
-	var userById models.UsersStruct
-
-	query, err := store.database.Tx.Prepare(sql)
-	if err != nil {
-		store.log.WithFields(logrus.Fields{
-			"event":      "sharpeningStore::GetUserById - Failed to prepare GetUserById SELECT query.",
-			"stackTrace": string(debug.Stack()),
-		}).Error(err)
-		return userById, err
-	}
-	defer query.Close()
-
-	rows, err := query.Query(userId)
-	if err != nil {
-		return userById, err
-	}
-	defer rows.Close()
-
-	users := make([]models.UsersStruct, 0)
-	for rows.Next() {
-		err = rows.Scan(
-			&userById.ID,
-			&userById.FirstName,
-			&userById.LastName,
-			&userById.Email,
-			&userById.PhoneNumber,
-			&userById.UUID,
-			&userById.IsStaff,
-		)
-		if err != nil {
-			return userById, err
-		}
-
-		users = append(users, userById)
-	}
-
-	if rows.Err() != nil {
-		return userById, err
-	}
-
-	return userById, nil
-}
-
-func (store *sharpeningStore) CreateUser(userResponse *models.UsersStruct) (userId int, err error) {
-	sql := `INSERT INTO users (
-		first_name,
-		last_name,
-		email,
-		phone_number,
-		uuid
-	) VALUES (?,?,?,?,?)`
-
-	sqlStmt, err := store.database.Tx.Prepare(sql)
-	if err != nil {
-		store.log.WithFields(logrus.Fields{
-			"event":      "sharpeningStore::CreateUser - Failed to prepare CreateUser SQL",
-			"query":      sql,
-			"stackTrace": string(debug.Stack()),
-		}).Error(err)
-		return
-	}
-
-	res, err := sqlStmt.Exec(
-		userResponse.FirstName,
-		userResponse.LastName,
-		userResponse.Email,
-		userResponse.PhoneNumber,
-		userResponse.UUID,
-	)
-	if err != nil {
-		store.log.WithFields(logrus.Fields{
-			"event":      "sharpeningStore::CreateUser - Failed to execute CreateUser SQL",
-			"query":      sql,
-			"stackTrace": string(debug.Stack()),
-		}).Error(err)
-		return
-	}
-
-	insertedId, err := res.LastInsertId()
-	if err != nil {
-		store.log.WithFields(logrus.Fields{
-			"event":      "sharpeningStore::CreateUser - Failed to get the last inserted id",
-			"query":      sql,
-			"stackTrace": string(debug.Stack()),
-		}).Error(err)
-		return
-	}
-
-	userId = int(insertedId)
-
-	return
-}*/
 
 func getSharpeningsFromQuery(query *sql.Stmt, userId int) ([]models.SharpeningStruct, error) {
 	rows, err := query.Query(userId)

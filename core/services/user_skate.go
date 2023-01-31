@@ -186,7 +186,7 @@ func (store *userSkateStore) GetAllUserSkatesByUserID(userId int) ([]models.User
 	return skates, nil
 }
 
-func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, userSkateId int) ([]models.UserSkateStruct, error) {
+func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, userSkateId int) (models.UserSkateStruct, error) {
 	sql := `SELECT 
 				user_skates.id,
 
@@ -244,26 +244,24 @@ func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, user
 			INNER JOIN brands as steel_brand ON user_skates.steel_id = steel_brand.id
 			LEFT JOIN colour as guard_colour ON user_skates.guard_colour_id = guard_colour.id
 			WHERE user_id = ? AND user_skates.id = ?`
-
+	var userSkate models.UserSkateStruct
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
 		store.log.WithFields(logrus.Fields{
 			"event":      "userSkateStore::GetUserSkateByUserIdAndUserSkateId - Failed to prepare GetUserSkateByUserIdAndUserSkateId SELECT query.",
 			"stackTrace": string(debug.Stack()),
 		}).Error(err)
-		return nil, err
+		return userSkate, err
 	}
 	defer query.Close()
 
 	rows, err := query.Query(userId, userSkateId)
 	if err != nil {
-		return nil, err
+		return userSkate, err
 	}
 	defer rows.Close()
 
-	skates := make([]models.UserSkateStruct, 0)
 	for rows.Next() {
-		var userSkate models.UserSkateStruct
 
 		var skate models.SkateStruct
 		var skateBrand models.BrandStruct
@@ -327,7 +325,7 @@ func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, user
 			&userSkate.PreferredRadius,
 		)
 		if err != nil {
-			return nil, err
+			return userSkate, err
 		}
 
 		skate.Model = skateModel
@@ -339,15 +337,13 @@ func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, user
 		userSkate.LaceColour = laceColour
 		userSkate.Steel = skate_steel
 		userSkate.GuardColour = guardColour
-
-		skates = append(skates, userSkate)
 	}
 
 	if rows.Err() != nil {
-		return nil, err
+		return userSkate, err
 	}
 
-	return skates, nil
+	return userSkate, nil
 }
 
 func (store *userSkateStore) CreateUserSkate(userSkateResponse *models.CreateUserSkateStruct) (userSkateId int, err error) {

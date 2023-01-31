@@ -102,7 +102,7 @@ func (controller UserSkateController) GetUserSkateByUserIdAndUserSkateId(writer 
 		return
 	}
 
-	response := ConstructUserSkatesResponse(userSkates)
+	response := ConstructUserSkatesInfoResponse(userSkates)
 
 	context.Core.Commit()
 

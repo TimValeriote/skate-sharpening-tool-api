@@ -51,7 +51,7 @@ type UpdateUserSkateStruct struct {
 
 type UserSkateService interface {
 	GetAllUserSkatesByUserID(userId int) ([]UserSkateStruct, error)
-	GetUserSkateByUserIdAndUserSkateId(userId int, userSkateId int) ([]UserSkateStruct, error)
+	GetUserSkateByUserIdAndUserSkateId(userId int, userSkateId int) (UserSkateStruct, error)
 	CreateUserSkate(userSkate *CreateUserSkateStruct) (int, error)
 	UpdateUserSkate(userSkate UpdateUserSkateStruct) (sql.Result, error)
 }
