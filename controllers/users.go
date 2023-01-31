@@ -102,8 +102,6 @@ func (controller UserController) GetUserByEmail(writer http.ResponseWriter, requ
 		return
 	}
 
-	fmt.Println(userEmail)
-
 	user, err := context.Core.UserService.GetUserByEmail(userEmail)
 	if err != nil {
 		http.Error(writer, `{"error": "Internal Server Error"}`, http.StatusInternalServerError)
