@@ -243,7 +243,7 @@ func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, user
 			INNER JOIN colour as lace_colour ON user_skates.lace_colour_id = lace_colour.id
 			INNER JOIN brands as steel_brand ON user_skates.steel_id = steel_brand.id
 			LEFT JOIN colour as guard_colour ON user_skates.guard_colour_id = guard_colour.id
-			WHERE user_id = ? AND user_skates.id = ?`
+			WHERE user_skates.user_id = ? AND user_skates.id = ?`
 	var userSkate models.UserSkateStruct
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
