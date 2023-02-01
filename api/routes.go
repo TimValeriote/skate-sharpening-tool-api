@@ -55,6 +55,7 @@ func SetupRouting(router *httprouter.Router, database *sql.DB, log *logrus.Logge
 		{"GET", "/stores/:storeId", controllers.StoreController{Log: log}.GetStoreById, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 
 		{"GET", "/sharpenings/open/:userId", controllers.SharpeningController{Log: log}.GetOpenSharpeningsForUser, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"DELETE", "/sharpenings/delete/open/:sharpenId/:userId", controllers.SharpeningController{Log: log}.DeleteSharpen, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 	}
 
 	api.Finalize()

@@ -1,7 +1,7 @@
 package models
 
 import (
-//"database/sql"
+	"database/sql"
 )
 
 type SharpeningStruct struct {
@@ -13,6 +13,7 @@ type SharpeningStruct struct {
 
 type SharpeningService interface {
 	GetOpenSharpeningsForUser(userId int) ([]SharpeningStruct, error)
+	DeleteSharpen(sharpenId int, userId int) (sql.Result, error)
 	//CreateSharpeningForUser(sharpening *SharpeningStruct) (int, error)
 	//RemoveSharpeningForUser(sharpeningId int) (sql.Result, error)
 }

@@ -58,6 +58,40 @@ func (controller SharpeningController) GetOpenSharpeningsForUser(writer http.Res
 	json.NewEncoder(writer).Encode(response)
 }
 
+func (controller SharpeningController) DeleteSharpen(writer http.ResponseWriter, request *http.Request) {
+	context, err := utils.NewServiceFromContext(request, constants.CONTEXT_PARAMS, constants.CONTEXT_LOGGER, constants.CONTEXT_CORE)
+	if err != nil {
+		context.Log.WithFields(logrus.Fields{
+			"event":      "phlapi::SharpeningController::DeleteSharpen - Failed to get value from context",
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	sharpenId, err := strconv.Atoi(context.Params.ByName("sharpenId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid sharpen id was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	userId, err := strconv.Atoi(context.Params.ByName("userId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid id was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	responseStatus := http.StatusOK
+
+	_, err = context.Core.SharpeningService.DeleteSharpen(sharpenId, userId)
+	if err != nil {
+		http.Error(writer, `{"error": "Internal Server Error"}`, http.StatusInternalServerError)
+		return
+	}
+
+	context.Core.Commit()
+	writer.WriteHeader(responseStatus)
+}
+
 func ConstructUserSharpeningInfoDetailsStruct(sharpenings []models.SharpeningStruct) SharpeningResponse {
 	var response SharpeningResponse
 	sharpeningsArray := make([]SharpeningInfoStruct, 0)

@@ -167,7 +167,7 @@ func (controller UserController) UpdateUser(writer http.ResponseWriter, request 
 	context, err := utils.NewServiceFromContext(request, constants.CONTEXT_PARAMS, constants.CONTEXT_LOGGER, constants.CONTEXT_CORE)
 	if err != nil {
 		context.Log.WithFields(logrus.Fields{
-			"event":      "phlapi::UserController::GetPeople - Failed to get value from context",
+			"event":      "phlapi::UserController::UpdateUser - Failed to get value from context",
 			"stackTrace": string(debug.Stack()),
 		}).Error(err)
 		return
