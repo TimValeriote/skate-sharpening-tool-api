@@ -68,8 +68,8 @@ func (store *brandStore) GetBrandById(brandId int) ([]models.BrandStruct, error)
 			&brand.ID,
 			&brand.Name,
 			&brand.ShortName,
-			&brand.IsSteel,
 			&brand.IsSkate,
+			&brand.IsSteel,
 			&brand.IsHolder,
 		)
 		if err != nil {
@@ -100,8 +100,8 @@ func getBrandsFromQuery(query *sql.Stmt) ([]models.BrandStruct, error) {
 			&brand.ID,
 			&brand.Name,
 			&brand.ShortName,
-			&brand.IsSteel,
 			&brand.IsSkate,
+			&brand.IsSteel,
 			&brand.IsHolder,
 		)
 		if err != nil {
