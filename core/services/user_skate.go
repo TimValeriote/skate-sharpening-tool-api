@@ -450,3 +450,19 @@ func (store *userSkateStore) UpdateUserSkate(userSkate models.UpdateUserSkateStr
 
 	return
 }
+
+func (store *userSkateStore) DeleteUserSkate(userId int, userSkateId int) (result sql.Result, err error) {
+	sql := `DELETE FROM user_skates WHERE user_id = ? AND id = ?`
+
+	result, err = store.database.Tx.Exec(sql, userId, userSkateId)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "userSkateStore::DeleteUserSkate - Failed to execute DeleteUserSkate SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	return
+}

@@ -26,3 +26,7 @@ func (store *UserSkateStore) CreateUserSkate(userSkateResponse *models.CreateUse
 func (store *UserSkateStore) UpdateUserSkate(userSkate models.UpdateUserSkateStruct) (sql.Result, error) {
 	return services.UserSkateStoreSetup(store.Database, store.Log).UpdateUserSkate(userSkate)
 }
+
+func (store *UserSkateStore) DeleteUserSkate(userID int, userSkateId int) (sql.Result, error) {
+	return services.UserSkateStoreSetup(store.Database, store.Log).DeleteUserSkate(userID, userSkateId)
+}

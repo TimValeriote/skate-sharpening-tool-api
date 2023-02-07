@@ -38,6 +38,7 @@ func SetupRouting(router *httprouter.Router, database *sql.DB, log *logrus.Logge
 		{"GET", "/userskates/:userId/:userSkateId", controllers.UserSkateController{Log: log}.GetUserSkateByUserIdAndUserSkateId, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"POST", "/userskate/new/:userId", controllers.UserSkateController{Log: log}.CreateUserSkate, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"PUT", "/userskate/update/:userSkateId", controllers.UserSkateController{Log: log}.UpdateUserSkate, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"DELETE", "/userskate/delete/:userId/:userSkateId", controllers.UserSkateController{Log: log}.DeleteUserSkate, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 
 		{"GET", "/fits", controllers.FitController{Log: log}.GetFits, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"GET", "/fits/:fitId", controllers.FitController{Log: log}.GetFitsById, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},

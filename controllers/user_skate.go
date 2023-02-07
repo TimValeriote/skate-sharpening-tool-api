@@ -213,6 +213,42 @@ func (controller UserSkateController) UpdateUserSkate(writer http.ResponseWriter
 	writer.WriteHeader(responseStatus)
 }
 
+func (controller UserSkateController) DeleteUserSkate(writer http.ResponseWriter, request *http.Request) {
+	context, err := utils.NewServiceFromContext(request, constants.CONTEXT_PARAMS, constants.CONTEXT_LOGGER, constants.CONTEXT_CORE)
+	if err != nil {
+		context.Log.WithFields(logrus.Fields{
+			"event":      "phlapi::UserSkateController::DeleteUserSkate - Failed to get value from context",
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	userId, err := strconv.Atoi(context.Params.ByName("userId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid id was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	userSkateId, err := strconv.Atoi(context.Params.ByName("userSkateId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid id was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	responseStatus := http.StatusCreated
+
+	_, err = context.Core.UserSkateService.DeleteUserSkate(userId, userSkateId)
+	if err != nil {
+		http.Error(writer, `{"error": "Internal Server Error"}`, http.StatusInternalServerError)
+		return
+	} else {
+		responseStatus = http.StatusOK
+	}
+
+	context.Core.Commit()
+	writer.WriteHeader(responseStatus)
+}
+
 func ConstructUserSkatesResponse(userSkates []models.UserSkateStruct) UserSkateResponse {
 	var response UserSkateResponse
 	skatesArray := make([]UserSkatesInfoStruct, 0)
