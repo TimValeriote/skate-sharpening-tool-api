@@ -5,10 +5,11 @@ import (
 )
 
 type SharpeningStruct struct {
-	ID          int
-	UserId      int
-	UserSkateId int
-	StoreId     int
+	ID           int
+	UserId       int
+	UserSkateId  int
+	StoreId      int
+	ProgressText string
 }
 
 type SharpeningService interface {

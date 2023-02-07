@@ -21,7 +21,10 @@ func SharpeningStoreSetup(db *models.CoreDatabase, log *logrus.Entry) *sharpenin
 }
 
 func (store *sharpeningStore) GetOpenSharpeningsForUser(userId int) ([]models.SharpeningStruct, error) {
-	sql := `SELECT id, user_id, user_skate_id, store_id FROM open_sharpenings WHERE user_id = ?`
+	sql := `SELECT open_sharpenings.id, user_id, user_skate_id, store_id, progress.progress_text 
+			FROM open_sharpenings 
+			INNER JOIN progress_trans as progress ON open_sharpenings.progress_trans_id = progress.id
+			WHERE user_id = ?`
 	query, err := store.database.Tx.Prepare(sql)
 	if err != nil {
 		store.log.WithFields(logrus.Fields{
@@ -70,6 +73,7 @@ func getSharpeningsFromQuery(query *sql.Stmt, userId int) ([]models.SharpeningSt
 			&sharpening.UserId,
 			&sharpening.UserSkateId,
 			&sharpening.StoreId,
+			&sharpening.ProgressText,
 		)
 		if err != nil {
 			return nil, err

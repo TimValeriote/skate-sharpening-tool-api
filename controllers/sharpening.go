@@ -22,10 +22,11 @@ type SharpeningResponse struct {
 }
 
 type SharpeningInfoStruct struct {
-	ID          int `json:"id"`
-	UserId      int `json:"user_id"`
-	UserSkateId int `json:"user_skate_id"`
-	StoreId     int `json:"store_id"`
+	ID           int    `json:"id"`
+	UserId       int    `json:"user_id"`
+	UserSkateId  int    `json:"user_skate_id"`
+	StoreId      int    `json:"store_id"`
+	ProgressText string `json:"progress_text"`
 }
 
 func (controller SharpeningController) GetOpenSharpeningsForUser(writer http.ResponseWriter, request *http.Request) {
@@ -101,6 +102,7 @@ func ConstructUserSharpeningInfoDetailsStruct(sharpenings []models.SharpeningStr
 		indivSharpeningResp.UserId = sharpening.UserId
 		indivSharpeningResp.UserSkateId = sharpening.UserSkateId
 		indivSharpeningResp.StoreId = sharpening.StoreId
+		indivSharpeningResp.ProgressText = sharpening.ProgressText
 		sharpeningsArray = append(sharpeningsArray, indivSharpeningResp)
 	}
 	response.Sharpenings = sharpeningsArray

@@ -54,11 +54,17 @@ CREATE TABLE `store` (
   `store_number` int
 );
 
+CREATE TABLE `progress_trans` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `progress_text` varchar(255)
+);
+
 CREATE TABLE `open_sharpenings` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int,
   `user_skate_id` int,
-  `store_id` int
+  `store_id` int,
+  `progress_trans_id` int
 );
 
 CREATE TABLE `user_skates` (
@@ -97,6 +103,8 @@ ALTER TABLE `open_sharpenings` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`
 ALTER TABLE `open_sharpenings` ADD FOREIGN KEY (`user_skate_id`) REFERENCES `user_skates` (`id`);
 
 ALTER TABLE `open_sharpenings` ADD FOREIGN KEY (`store_id`) REFERENCES `store` (`id`);
+
+ALTER TABLE `open_sharpenings` ADD FOREIGN KEY (`progress_trans_id`) REFERENCES `progress_trans` (`id`);
 
 ALTER TABLE `user_skates` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
