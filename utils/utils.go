@@ -25,7 +25,7 @@ func LogsHeartbeat(log *logrus.Logger, loggingInterval int) {
 	for t := range time.NewTicker(time.Duration(logHeartBeatInterval)).C {
 		_ = t
 		log.WithFields(logrus.Fields{
-			"heartbeat": "At first I was afraid I was petrified",
+			"heartbeat": "And Just So We’re Clear About Back There... It Was Either Him Or Me.",
 		}).Info()
 	}
 }
@@ -62,7 +62,5 @@ func NewServiceFromContext(request *http.Request, values ...string) (*Controller
 			}
 		}
 	}
-
 	return service, nil
-
 }

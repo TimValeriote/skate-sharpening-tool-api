@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	//"net/http"
 
 	"github.com/gorilla/context"
 	"github.com/julienschmidt/httprouter"
@@ -17,13 +16,8 @@ func SetupRouting(router *httprouter.Router, database *sql.DB, log *logrus.Logge
 	api := apibuilder.NewApi("/sstapi", router, alice.New(context.ClearHandler, middleware.CORSMiddleware), alice.New(context.ClearHandler, middleware.OptionsMiddleware), log)
 
 	api.Routes = []apibuilder.Route{
+		//This is the index route, really only for testing and to confirm the API is running on your local enviro
 		{"GET", "/index", controllers.IndexController{Log: log}.Index, alice.New()},
-
-		//These are examples, there is no data in the db containing people
-		{"GET", "/people", controllers.PeopleController{Log: log}.GetPeople, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
-		{"GET", "/person/:personId", controllers.PeopleController{Log: log}.GetPerson, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
-		{"POST", "/people/new", controllers.PeopleController{Log: log}.CreatePerson, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
-		{"PUT", "/people/update/:personId", controllers.PeopleController{Log: log}.UpdatePersonByID, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 
 		{"GET", "/users", controllers.UserController{Log: log}.GetUsers, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"GET", "/user/byid/:userId", controllers.UserController{Log: log}.GetUserById, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},

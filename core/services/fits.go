@@ -2,9 +2,7 @@ package core
 
 import (
 	"database/sql"
-	//"fmt"
 	"runtime/debug"
-	//"strings"
 
 	"github.com/sirupsen/logrus"
 	"phl-skate-sharpening-api/core/models"

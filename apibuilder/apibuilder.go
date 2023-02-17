@@ -62,7 +62,6 @@ func optionsController(writer http.ResponseWriter, request *http.Request) {
 	//Yes, empty.  This is only here to handle pre-flight OPTIONS requests.
 }
 
-//
 func (store *ApiStruct) httpWrapper(handler http.Handler) httprouter.Handle {
 	return func(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 		// Get and set the url query params in context if they are valid

@@ -2,9 +2,7 @@ package core
 
 import (
 	"database/sql"
-	//"fmt"
 	"runtime/debug"
-	//"strings"
 
 	"github.com/sirupsen/logrus"
 	"phl-skate-sharpening-api/core/models"
@@ -262,7 +260,6 @@ func (store *userSkateStore) GetUserSkateByUserIdAndUserSkateId(userId int, user
 	defer rows.Close()
 
 	for rows.Next() {
-
 		var skate models.SkateStruct
 		var skateBrand models.BrandStruct
 		var skateModel models.ModelStruct
