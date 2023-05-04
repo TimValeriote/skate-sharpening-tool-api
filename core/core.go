@@ -31,6 +31,7 @@ func CreateBACoreContext(ctx context.Context, db *sql.DB) (*models.Core, error) 
 	core.SkateService = &implementation.SkateStore{core}
 	core.StoreService = &implementation.StoreStore{core}
 	core.SharpeningService = &implementation.SharpeningStore{core}
+	core.SharpeningCodeService = &implementation.SharpeningCodeStore{core}
 
 	return core, nil
 }

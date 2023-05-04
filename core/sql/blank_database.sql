@@ -90,6 +90,12 @@ CREATE TABLE `closed_sharpenings` (
   `store_id` int
 );
 
+CREATE TABLE `daily_sharpening_code` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `code` varchar(255),
+  `store_id` int
+);
+
 ALTER TABLE `staff` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 ALTER TABLE `skates` ADD FOREIGN KEY (`model_id`) REFERENCES `model` (`id`);
@@ -123,3 +129,5 @@ ALTER TABLE `closed_sharpenings` ADD FOREIGN KEY (`user_id`) REFERENCES `users` 
 ALTER TABLE `closed_sharpenings` ADD FOREIGN KEY (`user_skate_id`) REFERENCES `user_skates` (`id`);
 
 ALTER TABLE `closed_sharpenings` ADD FOREIGN KEY (`store_id`) REFERENCES `store` (`id`);
+
+ALTER TABLE `daily_sharpening_code` ADD FOREIGN KEY (`store_id`) REFERENCES `store` (`id`);

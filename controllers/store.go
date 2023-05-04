@@ -104,5 +104,6 @@ func ConstructStoreStructResponse(store models.StoreStruct) StoreInfoStruct {
 		City:        store.City,
 		Country:     store.Country,
 		PhoneNumber: store.PhoneNumber,
+		StoreNumber: store.StoreNumber,
 	}
 }

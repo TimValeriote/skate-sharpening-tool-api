@@ -103,13 +103,14 @@ type Core struct {
 	Log      *logrus.Entry
 	Ctx      context.Context
 
-	UserService       UserService
-	ColourService     ColourService
-	UserSkateService  UserSkateService
-	FitService        FitService
-	BrandService      BrandService
-	ModelService      ModelService
-	SkateService      SkateService
-	StoreService      StoreService
-	SharpeningService SharpeningService
+	UserService           UserService
+	ColourService         ColourService
+	UserSkateService      UserSkateService
+	FitService            FitService
+	BrandService          BrandService
+	ModelService          ModelService
+	SkateService          SkateService
+	StoreService          StoreService
+	SharpeningService     SharpeningService
+	SharpeningCodeService SharpeningCodeService
 }
