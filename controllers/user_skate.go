@@ -249,6 +249,40 @@ func (controller UserSkateController) DeleteUserSkate(writer http.ResponseWriter
 	writer.WriteHeader(responseStatus)
 }
 
+func (controller UserSkateController) GetAllUserSkatesNotBeingSharpenedByUserId(writer http.ResponseWriter, request *http.Request) {
+	context, err := utils.NewServiceFromContext(request, constants.CONTEXT_PARAMS, constants.CONTEXT_LOGGER, constants.CONTEXT_CORE)
+	if err != nil {
+		context.Log.WithFields(logrus.Fields{
+			"event":      "phlapi::UserSkateController::GetAllUserSkatesNotBeingSharpenedByUserId - Failed to get value from context",
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	userId, err := strconv.Atoi(context.Params.ByName("userId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid id was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	userSkates, err := context.Core.UserSkateService.GetUserSkatesNotBeingSharpened(userId)
+	if err != nil {
+		context.Log.WithFields(logrus.Fields{
+			"event":      "phlapi::UserSkateController::GetAllUserSkatesNotBeingSharpenedByUserId - Failed to get value from context",
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		http.Error(writer, `{"error": "Internal Server Error"}`, http.StatusInternalServerError)
+		return
+	}
+
+	response := ConstructUserSkatesResponse(userSkates)
+
+	context.Core.Commit()
+
+	writer.WriteHeader(http.StatusOK)
+	json.NewEncoder(writer).Encode(response)
+}
+
 func ConstructUserSkatesResponse(userSkates []models.UserSkateStruct) UserSkateResponse {
 	var response UserSkateResponse
 	skatesArray := make([]UserSkatesInfoStruct, 0)

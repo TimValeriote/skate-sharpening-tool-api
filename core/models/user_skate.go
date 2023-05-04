@@ -55,4 +55,5 @@ type UserSkateService interface {
 	CreateUserSkate(userSkate *CreateUserSkateStruct) (int, error)
 	UpdateUserSkate(userSkate UpdateUserSkateStruct) (sql.Result, error)
 	DeleteUserSkate(userId int, userSkateId int) (sql.Result, error)
+	GetUserSkatesNotBeingSharpened(userId int) ([]UserSkateStruct, error)
 }

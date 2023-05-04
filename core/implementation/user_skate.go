@@ -30,3 +30,7 @@ func (store *UserSkateStore) UpdateUserSkate(userSkate models.UpdateUserSkateStr
 func (store *UserSkateStore) DeleteUserSkate(userID int, userSkateId int) (sql.Result, error) {
 	return services.UserSkateStoreSetup(store.Database, store.Log).DeleteUserSkate(userID, userSkateId)
 }
+
+func (store *UserSkateStore) GetUserSkatesNotBeingSharpened(userID int) ([]models.UserSkateStruct, error) {
+	return services.UserSkateStoreSetup(store.Database, store.Log).GetUserSkatesNotBeingSharpened(userID)
+}

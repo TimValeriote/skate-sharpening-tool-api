@@ -30,6 +30,7 @@ func SetupRouting(router *httprouter.Router, database *sql.DB, log *logrus.Logge
 
 		{"GET", "/userskates/:userId", controllers.UserSkateController{Log: log}.GetAllUserSkatesByUserID, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"GET", "/userskates/:userId/:userSkateId", controllers.UserSkateController{Log: log}.GetUserSkateByUserIdAndUserSkateId, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
+		{"GET", "/userskatesnotsharpening/:userId", controllers.UserSkateController{Log: log}.GetAllUserSkatesNotBeingSharpenedByUserId, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"POST", "/userskate/new/:userId", controllers.UserSkateController{Log: log}.CreateUserSkate, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"PUT", "/userskate/update/:userSkateId", controllers.UserSkateController{Log: log}.UpdateUserSkate, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
 		{"DELETE", "/userskate/delete/:userId/:userSkateId", controllers.UserSkateController{Log: log}.DeleteUserSkate, alice.New(middleware.CoreMasterCoreMiddleware, middleware.CoreApplicationServiceMiddleware)},
