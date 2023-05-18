@@ -9,4 +9,5 @@ type SharpeningCodeStruct struct {
 
 type SharpeningCodeService interface {
 	GetSharpeningCodeInfo(code string) ([]SharpeningCodeStruct, bool, error)
+	InsertStoreCode(storeId int, code string) (err error)
 }

@@ -86,3 +86,32 @@ func (store *sharpeningCodeStore) GetSharpeningCodeInfo(code string) ([]models.S
 
 	return codes, validCode, nil
 }
+
+func (store *sharpeningCodeStore) InsertStoreCode(storeId int, code string) (err error) {
+	sql := `INSERT INTO daily_sharpening_code (store_id, code) VALUES (?,?)`
+
+	sqlStmt, err := store.database.Tx.Prepare(sql)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "sharpeningCodeStore::InsertStoreCode - Failed to prepare InsertStoreCode SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	_, err = sqlStmt.Exec(
+		storeId,
+		code,
+	)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "sharpeningCodeStore::InsertStoreCode - Failed to execute InsertStoreCode SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	return
+}

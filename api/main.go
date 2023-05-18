@@ -8,6 +8,7 @@ import (
 	"runtime/debug"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jasonlvhit/gocron"
 	"github.com/julienschmidt/httprouter"
 	"github.com/sirupsen/logrus"
 	"phl-skate-sharpening-api/config"
@@ -19,6 +20,7 @@ var database *sql.DB
 var logger *logrus.Logger
 
 func main() {
+
 	var err error
 	var configFile string
 
@@ -64,6 +66,13 @@ func main() {
 			"stacktrace": string(debug.Stack()),
 		}).Fatal(err)
 	}
+
+	utils.CreateNewStoreCodes(database)
+
+	s := gocron.NewScheduler()
+	function := func() { utils.CreateNewStoreCodes(database) }
+	s.Every(1).Day().At("04:00").Do(function)
+	<-s.Start()
 
 	router := httprouter.New()
 

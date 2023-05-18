@@ -16,6 +16,7 @@ require (
 	github.com/Tomasen/realip v0.0.0-20180522021738-f0c99a92ddce
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/gorilla/context v1.1.1
+	github.com/jasonlvhit/gocron v0.0.1
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/justinas/alice v1.2.0
 	github.com/rs/cors v1.8.3
