@@ -58,6 +58,48 @@ func (controller SharpeningController) GetOpenSharpeningsForUser(writer http.Res
 	json.NewEncoder(writer).Encode(response)
 }
 
+func (controller SharpeningController) CreateNewUserSharpening(writer http.ResponseWriter, request *http.Request) {
+	context, err := utils.NewServiceFromContext(request, constants.CONTEXT_PARAMS, constants.CONTEXT_LOGGER, constants.CONTEXT_CORE)
+	if err != nil {
+		context.Log.WithFields(logrus.Fields{
+			"event":      "phlapi::SharpeningController::GetOpenSharpeningsForUser - Failed to get value from context",
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	userId, err := strconv.Atoi(context.Params.ByName("userId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid user id was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	userSkateId, err := strconv.Atoi(context.Params.ByName("userSkateId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid user skate id was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	storeId, err := strconv.Atoi(context.Params.ByName("storeId"))
+	if err != nil {
+		http.Error(writer, `{"error": "No valid store id was provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	responseStatus := http.StatusCreated
+
+	err = context.Core.SharpeningService.AddSharpening(userId, userSkateId, storeId)
+	if err != nil {
+		http.Error(writer, `{"error": "Internal Server Error"}`, http.StatusInternalServerError)
+		return
+	} else {
+		responseStatus = http.StatusOK
+	}
+
+	context.Core.Commit()
+	writer.WriteHeader(responseStatus)
+}
+
 func (controller SharpeningController) DeleteSharpen(writer http.ResponseWriter, request *http.Request) {
 	context, err := utils.NewServiceFromContext(request, constants.CONTEXT_PARAMS, constants.CONTEXT_LOGGER, constants.CONTEXT_CORE)
 	if err != nil {

@@ -20,6 +20,40 @@ func SharpeningStoreSetup(db *models.CoreDatabase, log *logrus.Entry) *sharpenin
 	}
 }
 
+func (store *sharpeningStore) AddSharpening(userId int, userSkateId int, storeId int) (err error) {
+	sql := `INSERT INTO open_sharpenings (
+		user_id,
+		user_skate_id,
+		store_id
+	) VALUES (?,?,?)`
+
+	sqlStmt, err := store.database.Tx.Prepare(sql)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "sharpeningStore::AddSharpening - Failed to prepare AddSharpening SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	_, err = sqlStmt.Exec(
+		userId,
+		userSkateId,
+		storeId,
+	)
+	if err != nil {
+		store.log.WithFields(logrus.Fields{
+			"event":      "sharpeningStore::AddSharpening - Failed to execute AddSharpening SQL",
+			"query":      sql,
+			"stackTrace": string(debug.Stack()),
+		}).Error(err)
+		return
+	}
+
+	return
+}
+
 func (store *sharpeningStore) GetOpenSharpeningsForUser(userId int) ([]models.SharpeningStruct, error) {
 	sql := `SELECT open_sharpenings.id, user_id, user_skate_id, store_id, progress.progress_text 
 			FROM open_sharpenings 

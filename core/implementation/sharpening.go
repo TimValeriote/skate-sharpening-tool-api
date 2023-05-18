@@ -18,3 +18,7 @@ func (store *SharpeningStore) GetOpenSharpeningsForUser(userId int) ([]models.Sh
 func (store *SharpeningStore) DeleteSharpen(sharpenId int, userId int) (sql.Result, error) {
 	return services.SharpeningStoreSetup(store.Database, store.Log).DeleteSharpen(sharpenId, userId)
 }
+
+func (store *SharpeningStore) AddSharpening(userId int, userSkateId int, storeId int) (err error) {
+	return services.SharpeningStoreSetup(store.Database, store.Log).AddSharpening(userId, userSkateId, storeId)
+}

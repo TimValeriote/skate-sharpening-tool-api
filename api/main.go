@@ -8,7 +8,7 @@ import (
 	"runtime/debug"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jasonlvhit/gocron"
+	//"github.com/jasonlvhit/gocron"
 	"github.com/julienschmidt/httprouter"
 	"github.com/sirupsen/logrus"
 	"phl-skate-sharpening-api/config"
@@ -67,12 +67,12 @@ func main() {
 		}).Fatal(err)
 	}
 
-	utils.CreateNewStoreCodes(database)
+	/*utils.CreateNewStoreCodes(database)
 
 	s := gocron.NewScheduler()
 	function := func() { utils.CreateNewStoreCodes(database) }
 	s.Every(1).Day().At("04:00").Do(function)
-	<-s.Start()
+	<-s.Start()*/
 
 	router := httprouter.New()
 

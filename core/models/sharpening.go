@@ -15,4 +15,5 @@ type SharpeningStruct struct {
 type SharpeningService interface {
 	GetOpenSharpeningsForUser(userId int) ([]SharpeningStruct, error)
 	DeleteSharpen(sharpenId int, userId int) (sql.Result, error)
+	AddSharpening(userId int, userSkateId int, storeId int) (err error)
 }
