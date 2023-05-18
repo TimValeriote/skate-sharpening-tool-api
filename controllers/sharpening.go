@@ -74,13 +74,13 @@ func (controller SharpeningController) CreateNewUserSharpening(writer http.Respo
 		return
 	}
 
-	userSkateId, err := strconv.Atoi(context.Params.ByName("userSkateId"))
+	userSkateId, err := strconv.Atoi(request.URL.Query().Get("userSkateId"))
 	if err != nil {
 		http.Error(writer, `{"error": "No valid user skate id was provided"}`, http.StatusBadRequest)
 		return
 	}
 
-	storeId, err := strconv.Atoi(context.Params.ByName("storeId"))
+	storeId, err := strconv.Atoi(request.URL.Query().Get("storeId"))
 	if err != nil {
 		http.Error(writer, `{"error": "No valid store id was provided"}`, http.StatusBadRequest)
 		return
